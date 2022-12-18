@@ -32,11 +32,11 @@ int maxAngle                = 135;
 void setup() {
     Serial.being( 9600 );
 
-    Servo1.attach( Servo_Left,   9 );
-    Servo2.attach( Servo_Right,  10 );
+    Servo_Left.attach(  9 );
+    Servo_Right.attach( 10 );
 
-    Servo1.setEasingType(EASE_CUBIC_IN_OUT);
-    Servo2.setEasingType(EASE_CUBIC_IN_OUT);
+    Servo_Left.setEasingType(   EASE_CUBIC_IN_OUT );
+    Servo_Right.setEasingType(  EASE_CUBIC_IN_OUT );
 
     synchronizeAllServosStartAndWaitForAllServosToStop();
 }
