@@ -11,7 +11,7 @@ ServoEasing Servo_Left;
 
 // ===== Declaracion de pines =====
 
-int BUTTON_PIN, INPUT = D9;
+int BUTTON_PIN = D9;
 
 // ===== Variables de control de estados =====
 
