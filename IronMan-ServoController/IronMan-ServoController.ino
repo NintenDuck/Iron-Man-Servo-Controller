@@ -9,6 +9,10 @@
 ServoEasing Servo_Right;
 ServoEasing Servo_Left;
 
+// ===== Declaracion de pines =====
+
+int BUTTON_PIN, INPUT);= D9;
+
 // ===== Variables de control de estados =====
 
 
@@ -32,6 +36,11 @@ int maxAngle                = 135;
 void setup() {
     Serial.being( 9600 );
 
+    // ===== Setup de boton =====
+    
+    pinMode(BUTTON_PIN, INPUT);
+
+    // ===== Setup de servo motores =====
     Servo_Left.attach(  9 );
     Servo_Right.attach( 10 );
 
@@ -44,4 +53,5 @@ void setup() {
 
 
 void loop() {
+
 }
