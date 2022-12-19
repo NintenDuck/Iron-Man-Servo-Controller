@@ -1,4 +1,4 @@
-#include "ServoEasing.h"
+#include "ServoEasing.hpp"
 
 // ================================================== *
 //          DECLARACION DE VARIABLES
@@ -11,7 +11,8 @@ ServoEasing Servo_Left;
 
 // ===== Declaracion de pines =====
 
-int BUTTON_PIN = D9;
+int BUTTON_PIN              = 1;
+int button_pin_data         = 0;
 
 // ===== Variables de control de estados =====
 
@@ -30,11 +31,26 @@ int maxAngle                = 135;
 
 
 // ================================================== *
+//          DECLARACION DE METODOS PERSONALES
+// ================================================== *
+
+void open_mask() {
+    Serial.println("opening mask!");
+}
+void close_mask() {
+    Serial.println("closing mask!");
+}
+
+int check_servo_state() {
+    Serial.println("checking servo state!");
+}
+
+// ================================================== *
 //          INIT SETTING Y LOOP DEL PROYECTO
 // ================================================== *
 
 void setup() {
-    Serial.being( 9600 );
+    Serial.begin( 9600 );
 
     // ===== Setup de boton =====
     
@@ -53,5 +69,19 @@ void setup() {
 
 
 void loop() {
+    button_pin_data = analogRead(BUTTON_PIN);
 
+
+    if ( button_pin_data == HIGH ) {
+        currentServoState = check_servo_state();
+
+        if ( currentServoState == 0 ) {
+            if ( currentMaskState == 0 ) {
+                close_mask();
+            }
+            else {
+                open_mask();
+            }
+        }
+    }
 }
