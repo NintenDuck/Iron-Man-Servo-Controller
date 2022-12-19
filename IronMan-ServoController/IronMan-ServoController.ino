@@ -35,14 +35,18 @@ int maxAngle                = 135;
 // ================================================== *
 
 void open_mask() {
-    Serial.println("opening mask!");
+    Serial.println( "opening mask!" );
 }
 void close_mask() {
-    Serial.println("closing mask!");
+    Serial.println( "closing mask!" );
 }
 
-int check_servo_state() {
-    Serial.println("checking servo state!");
+int get_servo_state() {
+    if ( Servo_Right.isMoving() ) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 // ================================================== *
@@ -73,14 +77,14 @@ void loop() {
 
 
     if ( button_pin_data == HIGH ) {
-        currentServoState = check_servo_state();
+        currentServoState = get_servo_state();
 
         if ( currentServoState == 0 ) {
             if ( currentMaskState == 0 ) {
-                close_mask();
+                open_mask();
             }
             else {
-                open_mask();
+                close_mask();
             }
         }
     }
