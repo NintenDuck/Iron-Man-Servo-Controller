@@ -21,7 +21,7 @@ int current_servo_state			= 0;	// Estados de servo:
 										// 0: Detenido
 										// 1: Moviendose
 
-int current_mask_state			= 0;        // Estados de mascara:
+int current_mask_state			= 0;	// Estados de mascara:
 										// 0: Abajo
 										// 1: Arriba
 
