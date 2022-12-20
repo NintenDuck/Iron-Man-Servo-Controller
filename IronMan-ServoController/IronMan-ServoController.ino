@@ -1,52 +1,52 @@
 #include "ServoEasing.hpp"
 
 // ================================================== *
-//          DECLARACION DE VARIABLES
+//			DECLARACION DE VARIABLES
 // ================================================== *
 
 // ===== Variables para el servo motor =====
 
-ServoEasing Servo_Right;
-ServoEasing Servo_Left;
+ServoEasing servo_right;
+ServoEasing servo_left;
 
 // ===== Declaracion de pines =====
 
-int BUTTON_PIN              = 1;
-int button_pin_data         = 0;
+const BUTTON_PIN			= 1;
+int button_pin_data			= 0;
 
 // ===== Variables de control de estados =====
 
 
-int currentServoState       = 0;        // Estados de servo:
-                                        // 0: Detenido
-                                        // 1: Moviendose
+int current_servo_state			= 0;	// Estados de servo:
+										// 0: Detenido
+										// 1: Moviendose
 
-int currentMaskState        = 0;        // Estados de mascara:
-                                        // 0: Abajo
-                                        // 1: Arriba
+int current_mask_state			= 0;        // Estados de mascara:
+										// 0: Abajo
+										// 1: Arriba
 
 // ===== Variables Auxiliares =====
 
-int maxAngle                = 135;
+int maxAngle					= 135;
 
 
 // ================================================== *
-//          DECLARACION DE METODOS PERSONALES
+//			DECLARACION DE METODOS PERSONALES
 // ================================================== *
 
 void open_mask() {
-    Serial.println( "opening mask!" );
+	Serial.println( "opening mask!" );
 }
 void close_mask() {
-    Serial.println( "closing mask!" );
+	Serial.println( "closing mask!" );
 }
 
 int get_servo_state() {
-    if ( Servo_Right.isMoving() ) {
-        return 1;
-    } else {
-        return 0;
-    }
+	if ( servo_right.isMoving() ) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 // ================================================== *
@@ -54,38 +54,38 @@ int get_servo_state() {
 // ================================================== *
 
 void setup() {
-    Serial.begin( 9600 );
+	Serial.begin( 9600 );
 
-    // ===== Setup de boton =====
-    
-    pinMode(BUTTON_PIN, INPUT);
+	// ===== Setup de boton =====
+	
+	pinMode(BUTTON_PIN, INPUT);
 
-    // ===== Setup de servo motores =====
-    Servo_Left.attach(  9 );
-    Servo_Right.attach( 10 );
+	// ===== Setup de servo motores =====
+	servo_left.attach(	9 );
+	servo_right.attach(	10 );
 
-    Servo_Left.setEasingType(   EASE_CUBIC_IN_OUT );
-    Servo_Right.setEasingType(  EASE_CUBIC_IN_OUT );
+	servo_left.setEasingType(	EASE_CUBIC_IN_OUT );
+	servo_right.setEasingType(	EASE_CUBIC_IN_OUT );
 
-    synchronizeAllServosStartAndWaitForAllServosToStop();
+	synchronizeAllServosStartAndWaitForAllServosToStop();
 }
 
 
 
 void loop() {
-    button_pin_data = analogRead(BUTTON_PIN);
+	button_pin_data = analogRead(BUTTON_PIN);
 
 
-    if ( button_pin_data == HIGH ) {
-        currentServoState = get_servo_state();
+	if ( button_pin_data == HIGH ) {
+		current_servo_state = get_servo_state();
 
-        if ( currentServoState == 0 ) {
-            if ( currentMaskState == 0 ) {
-                open_mask();
-            }
-            else {
-                close_mask();
-            }
-        }
-    }
+		if ( current_servo_state == 0 ) {
+			if ( current_mask_state == 0 ) {
+				open_mask();
+			}
+			else {
+				close_mask();
+			}
+		}
+	}
 }
