@@ -11,7 +11,7 @@ ServoEasing servo_left;
 
 // ===== Declaracion de pines =====
 
-const BUTTON_PIN			= 1;
+int BUTTON_PIN			= 1;
 int button_pin_data			= 0;
 
 // ===== Variables de control de estados =====
