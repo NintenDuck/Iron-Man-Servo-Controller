@@ -11,11 +11,11 @@ ServoEasing servo_left;
 
 // ===== Declaracion de pines =====
 
-int BUTTON_PIN			= 1;
-int SERVO_LEFT_PIN		= 2;
-int SERVO_RIGHT_PIN		= 3;
+int BUTTON_PIN					= 1;
+int SERVO_LEFT_PIN				= 2;
+int SERVO_RIGHT_PIN				= 3;
 
-int button_pin_data			= 0;
+int button_pin_data				= 0;
 
 // ===== Variables de control de estados =====
 
@@ -29,8 +29,6 @@ int current_mask_state			= 0;	// Estados de mascara:
 										// 1: Arriba
 
 // ===== Variables Auxiliares =====
-
-int maxAngle					= 135;
 
 int open_angle					= 180;
 int close_angle					= 0;
@@ -57,7 +55,7 @@ void close_mask() {
 }
 
 int get_servo_state() {
-	if ( servo_right.isMoving() ) {
+	if ( servo_right.isMoving() || servo_left.isMoving() ) {
 		return 1;
 	} else {
 		return 0;
@@ -76,8 +74,9 @@ void setup() {
 	pinMode(BUTTON_PIN, INPUT);
 
 	// ===== Setup de servo motores =====
-	servo_left.attach( SERVO_LEFT_PIN, 0);
-	servo_right.attach(	SERVO_RIGHT_PIN, 0);
+
+	servo_left.attach( 	SERVO_LEFT_PIN, 	0 );
+	servo_right.attach(	SERVO_RIGHT_PIN, 	0 );
 
 	servo_left.setEasingType(	EASE_CUBIC_IN_OUT );
 	servo_right.setEasingType(	EASE_CUBIC_IN_OUT );
@@ -94,9 +93,8 @@ void setup() {
 
 void loop() {
 	button_pin_data = digitalRead(BUTTON_PIN);
-	Serial.println(button_pin_data);
 
-	if ( button_pin_data == 0 ) {
+	if ( button_pin_data == HIGH ) {
 		// Serial.println("Entered button_pin_data if");
 		current_servo_state = get_servo_state();
 
