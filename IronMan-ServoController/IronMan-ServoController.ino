@@ -12,6 +12,9 @@ ServoEasing servo_left;
 // ===== Declaracion de pines =====
 
 int BUTTON_PIN			= 1;
+int SERVO_LEFT_PIN		= 2;
+int SERVO_RIGHT_PIN		= 3;
+
 int button_pin_data			= 0;
 
 // ===== Variables de control de estados =====
@@ -29,16 +32,28 @@ int current_mask_state			= 0;	// Estados de mascara:
 
 int maxAngle					= 135;
 
+int open_angle					= 180;
+int close_angle					= 0;
+
+int servo_speed					= 150;
 
 // ================================================== *
 //			DECLARACION DE METODOS PERSONALES
 // ================================================== *
 
 void open_mask() {
-	Serial.println( "opening mask!" );
+	// Serial.println("Opening mask");
+	// Serial.println("Opening right servo");
+	servo_right.easeTo(open_angle, servo_speed);
+	// Serial.println("Opening left servo");
+	servo_left.easeTo(open_angle, servo_speed);
 }
 void close_mask() {
-	Serial.println( "closing mask!" );
+	// Serial.println("Closing mask");
+	// Serial.println("Closing right servo");
+	servo_right.easeTo(close_angle, servo_speed);
+	// Serial.println("Closing left servo");
+	servo_left.easeTo(close_angle, servo_speed);
 }
 
 int get_servo_state() {
@@ -61,25 +76,32 @@ void setup() {
 	pinMode(BUTTON_PIN, INPUT);
 
 	// ===== Setup de servo motores =====
-	servo_left.attach(	9 );
-	servo_right.attach(	10 );
+	servo_left.attach( SERVO_LEFT_PIN, 0);
+	servo_right.attach(	SERVO_RIGHT_PIN, 0);
 
 	servo_left.setEasingType(	EASE_CUBIC_IN_OUT );
 	servo_right.setEasingType(	EASE_CUBIC_IN_OUT );
 
-	synchronizeAllServosStartAndWaitForAllServosToStop();
+	delay(3000);
+	open_mask();
+	delay(3000);
+	close_mask();
+
+	// synchronizeAllServosStartAndWaitForAllServosToStop();
 }
 
 
 
 void loop() {
-	button_pin_data = analogRead(BUTTON_PIN);
+	button_pin_data = digitalRead(BUTTON_PIN);
+	Serial.println(button_pin_data);
 
-
-	if ( button_pin_data == HIGH ) {
+	if ( button_pin_data == 0 ) {
+		// Serial.println("Entered button_pin_data if");
 		current_servo_state = get_servo_state();
 
 		if ( current_servo_state == 0 ) {
+			// Serial.println("Entered current_ser if");
 			if ( current_mask_state == 0 ) {
 				open_mask();
 			}
