@@ -30,9 +30,6 @@ int current_mask_state			= 0;	// Estados de mascara:
 
 // ===== Variables Auxiliares =====
 
-int open_angle					= 180;
-int close_angle					= 0;
-
 int servo_speed					= 150;
 
 // ================================================== *
@@ -41,17 +38,15 @@ int servo_speed					= 150;
 
 void open_mask() {
 	// Serial.println("Opening mask");
-	// Serial.println("Opening right servo");
-	servo_right.easeTo(open_angle, servo_speed);
-	// Serial.println("Opening left servo");
-	servo_left.easeTo(open_angle, servo_speed);
+	servo_right.setEaseTo( 0, servo_speed);
+	servo_left.setEaseTo( 180, servo_speed);
+	synchronizeAllServosStartAndWaitForAllServosToStop();
 }
 void close_mask() {
 	// Serial.println("Closing mask");
-	// Serial.println("Closing right servo");
-	servo_right.easeTo(close_angle, servo_speed);
-	// Serial.println("Closing left servo");
-	servo_left.easeTo(close_angle, servo_speed);
+	servo_right.setEaseTo( 180, servo_speed);
+	servo_left.setEaseTo( 0, servo_speed);
+	synchronizeAllServosStartAndWaitForAllServosToStop();
 }
 
 int get_servo_state() {
@@ -75,7 +70,7 @@ void setup() {
 
 	// ===== Setup de servo motores =====
 
-	servo_left.attach( 	SERVO_LEFT_PIN, 	0 );
+	servo_left.attach( 	SERVO_LEFT_PIN, 	180 );
 	servo_right.attach(	SERVO_RIGHT_PIN, 	0 );
 
 	servo_left.setEasingType(	EASE_CUBIC_IN_OUT );
@@ -85,8 +80,6 @@ void setup() {
 	open_mask();
 	delay(3000);
 	close_mask();
-
-	// synchronizeAllServosStartAndWaitForAllServosToStop();
 }
 
 
