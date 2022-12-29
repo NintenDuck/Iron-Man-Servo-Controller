@@ -42,27 +42,29 @@ int eye_speed					= 1;
 inline int randInt(int min, int max) { return (rand() % (max - min)) + min; }
 
 void randomize_eyes(){
-  int ranNum = randInt(0, 6);
-  digitalWrite(EYE_PIN, LOW);
-  for(int i = 0; i < ranNum; i++) {
-    digitalWrite(EYE_PIN, HIGH);
-    delay(randInt(25, 150));
-    digitalWrite(EYE_PIN, LOW);
-    delay(randInt(10, 150));
+	int ranNum = randInt(0, 6);
+	digitalWrite(EYE_PIN, LOW);
+	for(int i = 0; i < ranNum; i++) {
+		digitalWrite(EYE_PIN, HIGH);
+		delay(randInt(25, 150));
+		digitalWrite(EYE_PIN, LOW);
+		delay(randInt(10, 150));
   }
 }
 
-void foo(int init_eyes_val = 0, char to='u') {
-	int i = init_eyes_val;
+void smooth_led_light(char led_action='u') {
+	int i = 0;
 
-	switch (to) {
+	switch (led_action) {
 		case 'u':
+			i = 0;
 			while ( i < 255 ) {
 				analogWrite( EYE_PIN, i++ );
 				delay( eye_speed );
 			}
 			break;
 		default:
+			i = 255;
 			while ( i >= 0 ) {
 				analogWrite( EYE_PIN, i-- );
 				delay( eye_speed );
@@ -73,11 +75,11 @@ void foo(int init_eyes_val = 0, char to='u') {
 
 void turn_eyes_on() {
 	randomize_eyes();
-	foo( 0, 'u' );
+	smooth_led_light( 'u' );
 }
 
 void turn_eyes_off(){
-	foo( 255, 'd' );
+	smooth_led_light( 'd' );
 }
 
 void open_mask() {
