@@ -1,5 +1,4 @@
 #include "ServoEasing.hpp"
-#include <time.h>
 
 // ================================================== *
 //			DECLARACION DE VARIABLES
