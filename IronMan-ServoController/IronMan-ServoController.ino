@@ -69,7 +69,6 @@ void smooth_led_light(char led_action='u') {
 				analogWrite( EYE_PIN, i-- );
 				delay( eye_speed );
 			}
-
 	}
 }
 
@@ -83,7 +82,6 @@ void turn_eyes_off(){
 }
 
 void open_mask() {
-	Serial.println( "Opening mask" );
 	servo_right.setEaseTo( 0, servo_speed );
 	servo_left.setEaseTo( 180, servo_speed );
 	synchronizeAllServosStartAndWaitForAllServosToStop();
@@ -91,7 +89,6 @@ void open_mask() {
 	turn_eyes_on();
 }
 void close_mask() {
-	Serial.println("Closing mask");
 	turn_eyes_off();
 	servo_right.setEaseTo( 180, servo_speed);
 	servo_left.setEaseTo( 0, servo_speed);
