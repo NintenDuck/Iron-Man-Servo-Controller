@@ -1,5 +1,5 @@
 #include "ServoEasing.hpp"
-
+#include "time.h"
 // ================================================== *
 //			DECLARACION DE VARIABLES
 // ================================================== *
@@ -33,30 +33,51 @@ int current_mask_state			= 0;	// Estados de mascara:
 // ===== Variables Auxiliares =====
 
 int servo_speed					= 150;
+int eye_speed					= 1;
 
 // ================================================== *
 //			DECLARACION DE METODOS PERSONALES
 // ================================================== *
 
-// inline int randInt(int min, int max) { return (rand() % (max - min)) + min; }
+inline int randInt(int min, int max) { return (rand() % (max - min)) + min; }
 
-// void randomize_eyes(){
-//   int ranNum = randInt(0, 6);
-//   digitalWrite(EYE_PIN, LOW);
-//   for(int i = 0; i < ranNum; i++) {
-//     digitalWrite(EYE_PIN, HIGH);
-//     delay(randInt(25, 150));
-//     digitalWrite(EYE_PIN, LOW);
-//     delay(randInt(10, 150));
-//   }
-// }
+void randomize_eyes(){
+  int ranNum = randInt(0, 6);
+  digitalWrite(EYE_PIN, LOW);
+  for(int i = 0; i < ranNum; i++) {
+    digitalWrite(EYE_PIN, HIGH);
+    delay(randInt(25, 150));
+    digitalWrite(EYE_PIN, LOW);
+    delay(randInt(10, 150));
+  }
+}
+
+void foo(int init_eyes_val = 0, char to='u') {
+	int i = init_eyes_val;
+
+	switch (to) {
+		case 'u':
+			while ( i < 255 ) {
+				analogWrite( EYE_PIN, i++ );
+				delay( eye_speed );
+			}
+			break;
+		default:
+			while ( i >= 0 ) {
+				analogWrite( EYE_PIN, i-- );
+				delay( eye_speed );
+			}
+
+	}
+}
 
 void turn_eyes_on() {
-	digitalWrite( EYE_PIN, HIGH );
+	randomize_eyes();
+	foo( 0, 'u' );
 }
 
 void turn_eyes_off(){
-	digitalWrite( EYE_PIN, LOW );
+	foo( 255, 'd' );
 }
 
 void open_mask() {
@@ -89,7 +110,7 @@ int get_servo_state() {
 // ================================================== *
 
 void setup() {
-  srand(time(0));
+	srand(time(0));
 	Serial.begin( 9600 );
 
 	// ===== Setup de boton =====
@@ -99,15 +120,16 @@ void setup() {
 	pinMode( EYE_PIN, OUTPUT );
 
 	digitalWrite(BUTTON_POWER, HIGH);
-	digitalWrite( EYE_PIN, LOW);
 
 	// ===== Setup de servo motores =====
 
-	servo_left.attach( 	SERVO_LEFT_PIN, 	0 );
-	servo_right.attach(	SERVO_RIGHT_PIN, 	180 );
+	servo_left.attach( 	SERVO_LEFT_PIN, 	180 );
+	servo_right.attach(	SERVO_RIGHT_PIN, 	0 );
 
 	servo_left.setEasingType(	EASE_CUBIC_IN_OUT );
 	servo_right.setEasingType(	EASE_CUBIC_IN_OUT );
+
+	open_mask();
 }
 
 
