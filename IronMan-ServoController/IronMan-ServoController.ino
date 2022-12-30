@@ -11,11 +11,11 @@ ServoEasing servo_left;
 
 // ===== Declaracion de pines =====
 
-const int SERVO_LEFT_PIN				= 7;
-const int SERVO_RIGHT_PIN				= 6;
-const int BUTTON_POWER					= 13;
-const int BUTTON_PIN					= 5;
-const int EYE_PIN						= 3;
+int SERVO_RIGHT_PIN				= 12;
+int SERVO_LEFT_PIN				= 11;
+int BUTTON_POWER				= 10;
+int EYE_PIN						= 9;
+int BUTTON_PIN					= 8;
 
 
 // ===== Variables de control de estados =====
@@ -46,14 +46,14 @@ int eye_speed							= 1;
 
 inline int randInt(int min, int max) { return (rand() % (max - min)) + min; }
 
-void randomize_eyes(){
-	int ranNum = randInt(0, 6);
-	digitalWrite(EYE_PIN, LOW);
-	for(int i = 0; i < ranNum; i++) {
-		digitalWrite(EYE_PIN, HIGH);
-		delay(randInt(25, 150));
-		digitalWrite(EYE_PIN, LOW);
-		delay(randInt(10, 150));
+void randomize_eye_light(){
+  int ranNum = randInt(0, 6);
+  digitalWrite(EYE_PIN, LOW);
+  for(int i = 0; i < ranNum; i++) {
+    digitalWrite(EYE_PIN, HIGH);
+    delay(randInt(25, 150));
+    digitalWrite(EYE_PIN, LOW);
+    delay(randInt(10, 150));
   }
 }
 
@@ -78,7 +78,7 @@ void smooth_led_light(char led_action='u') {
 }
 
 void turn_eyes_on() {
-	randomize_eyes();
+	randomize_eye_light();
 	smooth_led_light( 'u' );
 }
 
