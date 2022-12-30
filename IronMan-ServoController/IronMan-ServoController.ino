@@ -11,29 +11,34 @@ ServoEasing servo_left;
 
 // ===== Declaracion de pines =====
 
-int SERVO_LEFT_PIN				= 7;
-int SERVO_RIGHT_PIN				= 6;
-int BUTTON_POWER				= 13;
-int BUTTON_PIN					= 5;
-int EYE_PIN						= 3;
+const int SERVO_LEFT_PIN				= 7;
+const int SERVO_RIGHT_PIN				= 6;
+const int BUTTON_POWER					= 13;
+const int BUTTON_PIN					= 5;
+const int EYE_PIN						= 3;
 
-int button_pin_data				= LOW;
 
 // ===== Variables de control de estados =====
 
 
-int current_servo_state			= 0;	// Estados de servo:
-										// 0: Detenido
-										// 1: Moviendose
+int current_servo_state					= 0;	// Estados de servo:
+												// 0: Detenido
+												// 1: Moviendose
 
-int current_mask_state			= 0;	// Estados de mascara:
-										// 0: Abajo
-										// 1: Arriba
+int current_mask_state					= 0;	// Estados de mascara:
+												// 0: Abajo
+												// 1: Arriba
 
 // ===== Variables Auxiliares =====
 
-int servo_speed					= 150;
-int eye_speed					= 1;
+const int left_open_angle				= 180;
+const int right_open_angle				= 0;
+const int left_close_angle				= 0;
+const int right_close_angle				= 180;
+
+int button_pin_data						= LOW;
+int servo_speed							= 150;
+int eye_speed							= 1;
 
 // ================================================== *
 //			DECLARACION DE METODOS PERSONALES
@@ -82,16 +87,16 @@ void turn_eyes_off(){
 }
 
 void open_mask() {
-	servo_right.setEaseTo( 0, servo_speed );
-	servo_left.setEaseTo( 180, servo_speed );
+	servo_right.setEaseTo( right_open_angle, servo_speed );
+	servo_left.setEaseTo( left_open_angle, servo_speed );
 	synchronizeAllServosStartAndWaitForAllServosToStop();
 	current_mask_state = 1;
 	turn_eyes_on();
 }
 void close_mask() {
 	turn_eyes_off();
-	servo_right.setEaseTo( 180, servo_speed);
-	servo_left.setEaseTo( 0, servo_speed);
+	servo_right.setEaseTo( right_close_angle, servo_speed);
+	servo_left.setEaseTo( left_close_angle, servo_speed);
 	synchronizeAllServosStartAndWaitForAllServosToStop();
 	current_mask_state = 0;
 }
@@ -136,10 +141,8 @@ void setup() {
 void loop() {
 	delay(1000);
 	button_pin_data = digitalRead(BUTTON_PIN);
-
 	if ( button_pin_data == HIGH ) {
 		current_servo_state = get_servo_state();
-
 		if ( current_servo_state == 0 ) {
 			if ( current_mask_state == 0 ) {
 				open_mask();
