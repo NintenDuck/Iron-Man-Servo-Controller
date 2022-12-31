@@ -14,8 +14,8 @@ ServoEasing servo_left;
 int SERVO_RIGHT_PIN				= 12;
 int SERVO_LEFT_PIN				= 11;
 int BUTTON_POWER				= 10;
-int EYE_PIN						= 9;
 int BUTTON_PIN					= 8;
+int EYE_PIN						= 3;
 
 
 // ===== Variables de control de estados =====
