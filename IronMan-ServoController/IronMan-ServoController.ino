@@ -31,13 +31,15 @@ int current_mask_state					= 0;	// Estados de mascara:
 
 // ===== Variables Auxiliares =====
 
-const int left_open_angle				= 180;
-const int right_open_angle				= 0;
-const int left_close_angle				= 0;
-const int right_close_angle				= 180;
+const int left_open_angle				= 0;
+const int right_open_angle				= 180;
+const int left_close_angle				= 90;
+const int right_close_angle				= 90;
+
+const int servo_close_spd				= 110;
+const int servo_open_spd				= 130;
 
 int button_pin_data						= LOW;
-int servo_speed							= 150;
 int eye_speed							= 1;
 
 // ================================================== *
@@ -87,18 +89,18 @@ void turn_eyes_off(){
 }
 
 void open_mask() {
-	servo_right.setEaseTo( right_open_angle, servo_speed );
-	servo_left.setEaseTo( left_open_angle, servo_speed );
+	turn_eyes_off();
+	servo_right.setEaseTo( right_open_angle, servo_open_spd );
+	servo_left.setEaseTo( left_open_angle, servo_open_spd );
 	synchronizeAllServosStartAndWaitForAllServosToStop();
 	current_mask_state = 1;
-	turn_eyes_on();
 }
 void close_mask() {
-	turn_eyes_off();
-	servo_right.setEaseTo( right_close_angle, servo_speed);
-	servo_left.setEaseTo( left_close_angle, servo_speed);
+	servo_right.setEaseTo( right_close_angle, servo_close_spd);
+	servo_left.setEaseTo( left_close_angle, servo_close_spd);
 	synchronizeAllServosStartAndWaitForAllServosToStop();
 	current_mask_state = 0;
+	turn_eyes_on();
 }
 
 int get_servo_state() {
@@ -133,7 +135,7 @@ void setup() {
 	servo_left.setEasingType(	EASE_CUBIC_IN_OUT );
 	servo_right.setEasingType(	EASE_CUBIC_IN_OUT );
 
-	open_mask();
+	close_mask();
 }
 
 
