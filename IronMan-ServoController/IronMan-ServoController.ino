@@ -1,23 +1,24 @@
 #include "ServoEasing.hpp"
 #include "time.h"
+
 // ================================================== *
 //			DECLARACION DE VARIABLES
 // ================================================== *
 
-// ===== Variables para el servo motor =====
+// ===== Variables para el Servo Motor =====
 
 ServoEasing servo_right;
 ServoEasing servo_left;
 
-// ===== Declaracion de pines =====
+// ===== Declaracion de Pines =====
 
-int SERVO_RIGHT_PIN 			= 12;
-int SERVO_LEFT_PIN 				= 11;
-int BUTTON_POWER 				= 10;
-int BUTTON_PIN 					= 5;
-int EYE_PIN 					= 3;
+const int SERVO_RIGHT_PIN 			= 12;
+const int SERVO_LEFT_PIN 				= 11;
+const int BUTTON_POWER 				= 10;
+const int BUTTON_PIN 					= 5;
+const int EYE_PIN 					= 3;
 
-// ===== Variables de control de estados =====
+// ===== Variables de Control de Estados =====
 
 int current_servo_state 		= 0; // Estados de servo:
 							 		 // 0: Detenido
@@ -27,7 +28,7 @@ int current_mask_state 			= 0; // Estados de mascara:
 									 // 0: Abajo
 									 // 1: Arriba
 
-// ===== Variables Auxiliares =====
+// ===== Variables de Servos =====
 
 const int left_open_angle 		= 0;
 const int right_open_angle 		= 180;
@@ -37,48 +38,56 @@ const int right_close_angle 	= 90;
 const int servo_close_spd 		= 110;
 const int servo_open_spd 		= 130;
 
+// ===== Variables de Ojos =====
+
+const int eye_speed 			= 1;
+const int blink_speed_min		= 0;
+const int blink_speed_max		= 6;
+
+
+// ===== Variables de Boton =====
+
 int button_pin_data 			= LOW;
-int eye_speed 					= 1;
 
 // ================================================== *
 //			DECLARACION DE METODOS PERSONALES
 // ================================================== *
 
-inline int randInt(int min, int max) { return (rand() % (max - min)) + min; }
+inline int randInt( int min, int max ) { return ( rand() % ( max - min ) ) + min; }
 
 void randomize_eye_light()
 {
-	int ranNum = randInt(0, 6);
-	digitalWrite(EYE_PIN, LOW);
-	for (int i = 0; i < ranNum; i++)
+	int ranNum = randInt( blink_speed_min, blink_speed_max );
+	digitalWrite( EYE_PIN, LOW );
+	for ( int i = 0; i < ranNum; i++ )
 	{
-		digitalWrite(EYE_PIN, HIGH);
-		delay(randInt(25, 150));
-		digitalWrite(EYE_PIN, LOW);
-		delay(randInt(10, 150));
+		digitalWrite( EYE_PIN, HIGH );
+		delay( randInt( 25, 150 ) );
+		digitalWrite( EYE_PIN, LOW );
+		delay( randInt( 10, 150 ) );
 	}
 }
 
-void smooth_led_light(char led_action = 'u')
+void smooth_led_light( char led_action = 'u' )
 {
-	int i = 0;
+	int i;
 
-	switch (led_action)
+	switch ( led_action )
 	{
 	case 'u':
 		i = 0;
-		while (i < 255)
+		while ( i < 255 )
 		{
-			analogWrite(EYE_PIN, i++);
-			delay(eye_speed);
+			analogWrite( EYE_PIN, i++ );
+			delay( eye_speed );
 		}
 		break;
 	default:
 		i = 255;
-		while (i >= 0)
+		while ( i >= 0 )
 		{
-			analogWrite(EYE_PIN, i--);
-			delay(eye_speed);
+			analogWrite( EYE_PIN, i-- );
+			delay( eye_speed );
 		}
 	}
 }
@@ -86,26 +95,26 @@ void smooth_led_light(char led_action = 'u')
 void turn_eyes_on()
 {
 	randomize_eye_light();
-	smooth_led_light('u');
+	smooth_led_light( 'u' );
 }
 
 void turn_eyes_off()
 {
-	smooth_led_light('d');
+	smooth_led_light( 'd' );
 }
 
 void open_mask()
 {
 	turn_eyes_off();
-	servo_right.setEaseTo(right_open_angle, servo_open_spd);
-	servo_left.setEaseTo(left_open_angle, servo_open_spd);
+	servo_right.setEaseTo( right_open_angle, servo_open_spd );
+	servo_left.setEaseTo( left_open_angle, servo_open_spd );
 	synchronizeAllServosStartAndWaitForAllServosToStop();
 	current_mask_state = 1;
 }
 void close_mask()
 {
-	servo_right.setEaseTo(right_close_angle, servo_close_spd);
-	servo_left.setEaseTo(left_close_angle, servo_close_spd);
+	servo_right.setEaseTo( right_close_angle, servo_close_spd );
+	servo_left.setEaseTo( left_close_angle, servo_close_spd );
 	synchronizeAllServosStartAndWaitForAllServosToStop();
 	current_mask_state = 0;
 	turn_eyes_on();
@@ -113,7 +122,7 @@ void close_mask()
 
 int get_servo_state()
 {
-	if (servo_right.isMoving() || servo_left.isMoving())
+	if ( servo_right.isMoving() || servo_left.isMoving() )
 	{
 		return 1;
 	}
@@ -124,43 +133,43 @@ int get_servo_state()
 }
 
 // ================================================== *
-//          INIT SETTING Y LOOP DEL PROYECTO
+//INIT SETTING Y LOOP DEL PROYECTO
 // ================================================== *
 
 void setup()
 {
-	srand(time(0));
-	Serial.begin(9600);
+	srand( time( 0 ) );
+	Serial.begin( 9600 );
 
 	// ===== Setup de boton =====
 
-	pinMode(BUTTON_PIN, INPUT);
-	pinMode(BUTTON_POWER, OUTPUT);
-	pinMode(EYE_PIN, OUTPUT);
+	pinMode( BUTTON_PIN, INPUT );
+	pinMode( BUTTON_POWER, OUTPUT );
+	pinMode( EYE_PIN, OUTPUT );
 
-	digitalWrite(BUTTON_POWER, HIGH);
+	digitalWrite( BUTTON_POWER, HIGH );
 
 	// ===== Setup de servo motores =====
 
-	servo_left.attach(SERVO_LEFT_PIN, 180);
-	servo_right.attach(SERVO_RIGHT_PIN, 0);
+	servo_left.attach( SERVO_LEFT_PIN, 180 );
+	servo_right.attach( SERVO_RIGHT_PIN, 0 );
 
-	servo_left.setEasingType(EASE_CUBIC_IN_OUT);
-	servo_right.setEasingType(EASE_CUBIC_IN_OUT);
+	servo_left.setEasingType( EASE_CUBIC_IN_OUT );
+	servo_right.setEasingType( EASE_CUBIC_IN_OUT );
 
 	close_mask();
 }
 
 void loop()
 {
-	delay(1000);
-	button_pin_data = digitalRead(BUTTON_PIN);
-	if (button_pin_data == HIGH)
+	delay( 1000 );
+	button_pin_data = digitalRead( BUTTON_PIN );
+	if ( button_pin_data == HIGH )
 	{
 		current_servo_state = get_servo_state();
-		if (current_servo_state == 0)
+		if ( current_servo_state == 0 )
 		{
-			if (current_mask_state == 0)
+			if ( current_mask_state == 0 )
 			{
 				open_mask();
 			}
