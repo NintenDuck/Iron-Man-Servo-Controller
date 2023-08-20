@@ -30,19 +30,19 @@ int current_mask_state 			= 0; // Estados de mascara:
 
 // ===== Variables de Servos =====
 
-const int left_open_angle 		= 0;
-const int right_open_angle 		= 180;
-const int left_close_angle 		= 90;
-const int right_close_angle 	= 90;
+const int LEFT_OPEN_ANGLE 		= 0;
+const int RIGHT_OPEN_ANGLE 		= 180;
+const int LEFT_CLOSE_ANGLE 		= 90;
+const int RIGHT_CLOSE_ANGLE 	= 90;
 
-const int servo_close_spd 		= 110;
-const int servo_open_spd 		= 130;
+const int SERVO_CLOSE_SPD 		= 110;
+const int SERVO_OPEN_SPD 		= 130;
 
 // ===== Variables de Ojos =====
 
-const int eye_speed 			= 1;
-const int blink_speed_min		= 0;
-const int blink_speed_max		= 6;
+const int EYE_SPEED 			= 1;
+const int BLINK_SPEED_MIN		= 0;
+const int BLINK_SPEED_MAX		= 6;
 
 
 // ===== Variables de Boton =====
@@ -57,7 +57,7 @@ inline int randInt( int min, int max ) { return ( rand() % ( max - min ) ) + min
 
 void randomize_eye_light()
 {
-	int ranNum = randInt( blink_speed_min, blink_speed_max );
+	int ranNum = randInt( BLINK_SPEED_MIN, BLINK_SPEED_MAX );
 	digitalWrite( EYE_PIN, LOW );
 	for ( int i = 0; i < ranNum; i++ )
 	{
@@ -79,7 +79,7 @@ void smooth_led_light( char led_action = 'u' )
 		while ( i < 255 )
 		{
 			analogWrite( EYE_PIN, i++ );
-			delay( eye_speed );
+			delay( EYE_SPEED );
 		}
 		break;
 	default:
@@ -87,7 +87,7 @@ void smooth_led_light( char led_action = 'u' )
 		while ( i >= 0 )
 		{
 			analogWrite( EYE_PIN, i-- );
-			delay( eye_speed );
+			delay( EYE_SPEED );
 		}
 	}
 }
@@ -106,15 +106,15 @@ void turn_eyes_off()
 void open_mask()
 {
 	turn_eyes_off();
-	servo_right.setEaseTo( right_open_angle, servo_open_spd );
-	servo_left.setEaseTo( left_open_angle, servo_open_spd );
+	servo_right.setEaseTo( RIGHT_OPEN_ANGLE, SERVO_OPEN_SPD );
+	servo_left.setEaseTo( LEFT_OPEN_ANGLE, SERVO_OPEN_SPD );
 	synchronizeAllServosStartAndWaitForAllServosToStop();
 	current_mask_state = 1;
 }
 void close_mask()
 {
-	servo_right.setEaseTo( right_close_angle, servo_close_spd );
-	servo_left.setEaseTo( left_close_angle, servo_close_spd );
+	servo_right.setEaseTo( RIGHT_CLOSE_ANGLE, SERVO_CLOSE_SPD );
+	servo_left.setEaseTo( LEFT_CLOSE_ANGLE, SERVO_CLOSE_SPD );
 	synchronizeAllServosStartAndWaitForAllServosToStop();
 	current_mask_state = 0;
 	turn_eyes_on();
@@ -133,7 +133,7 @@ int get_servo_state()
 }
 
 // ================================================== *
-//INIT SETTING Y LOOP DEL PROYECTO
+//		INIT SETTING Y LOOP DEL PROYECTO
 // ================================================== *
 
 void setup()
