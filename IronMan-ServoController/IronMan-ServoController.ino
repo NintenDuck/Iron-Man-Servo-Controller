@@ -13,20 +13,20 @@ ServoEasing servo_left;
 // ===== Declaracion de Pines =====
 
 const int SERVO_RIGHT_PIN 			= 12;
-const int SERVO_LEFT_PIN 				= 11;
+const int SERVO_LEFT_PIN			= 11;
 const int BUTTON_POWER 				= 10;
-const int BUTTON_PIN 					= 5;
-const int EYE_PIN 					= 3;
+const int BUTTON_PIN				= 5;
+const int EYE_PIN					= 3;
 
 // ===== Variables de Control de Estados =====
 
-int current_servo_state 		= 0; // Estados de servo:
-							 		 // 0: Detenido
-							 		 // 1: Moviendose
+int current_servo_state 			= 0; // Estados de servo:
+							 			 // 0: Detenido
+							 			 // 1: Moviendose
 
-int current_mask_state 			= 0; // Estados de mascara:
-									 // 0: Abajo
-									 // 1: Arriba
+int current_mask_state 				= 0; // Estados de mascara:
+										 // 0: Abajo
+										 // 1: Arriba
 
 // ===== Variables de Servos =====
 
@@ -47,6 +47,7 @@ const int BLINK_SPEED_MAX		= 6;
 
 // ===== Variables de Boton =====
 
+const int BUTTON_REACTION_DELAY = 500;
 int button_pin_data 			= LOW;
 
 // ================================================== *
@@ -157,26 +158,30 @@ void setup()
 	servo_left.setEasingType( EASE_CUBIC_IN_OUT );
 	servo_right.setEasingType( EASE_CUBIC_IN_OUT );
 
+	// ===== Al iniciar el programa cerramos la mascara =====
+	// ===== por seguridad =====
 	close_mask();
 }
 
 void loop()
 {
-	delay( 1000 );
+	delay( BUTTON_REACTION_DELAY );
 	button_pin_data = digitalRead( BUTTON_PIN );
-	if ( button_pin_data == HIGH )
+	// Observa si el boton esta presionado
+	if ( button_pin_data != HIGH ) return;
+
+	// Observa si alguno de los servomotores se esta moviendo
+	current_servo_state = get_servo_state();
+	if ( current_servo_state != 0 ) return;
+
+	// Dependiendo del estado de la mascara (Abierta o cerrada)
+	// Hara lo inverso
+	if ( current_mask_state == 0 )
 	{
-		current_servo_state = get_servo_state();
-		if ( current_servo_state == 0 )
-		{
-			if ( current_mask_state == 0 )
-			{
-				open_mask();
-			}
-			else
-			{
-				close_mask();
-			}
-		}
+		open_mask();
+	}
+	else 
+	{
+		close_mask();
 	}
 }
