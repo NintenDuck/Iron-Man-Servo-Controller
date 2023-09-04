@@ -58,6 +58,8 @@ inline int randInt( int min, int max ) { return ( rand() % ( max - min ) ) + min
 
 void randomize_eye_light()
 {
+	// ===== Generamos un numero aleatorio
+	// para la cantidad de veces que parpadeara la luz =====
 	int ranNum = randInt( BLINK_SPEED_MIN, BLINK_SPEED_MAX );
 	digitalWrite( EYE_PIN, LOW );
 	for ( int i = 0; i < ranNum; i++ )
@@ -72,7 +74,8 @@ void randomize_eye_light()
 void smooth_led_light( char led_action = 'u' )
 {
 	int i;
-
+	
+	// ===== Los led iran suavemente bajando el brillo =====
 	switch ( led_action )
 	{
 	case 'u':
@@ -123,14 +126,8 @@ void close_mask()
 
 int get_servo_state()
 {
-	if ( servo_right.isMoving() || servo_left.isMoving() )
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
+	if ( servo_right.isMoving() || servo_left.isMoving() ) return 1;
+	return 0;
 }
 
 // ================================================== *
